@@ -92,27 +92,37 @@ jobs:
             fi
           no_output_timeout: 15m
       
+      # List generated files for debugging
+      - run:
+          name: List all generated screenshots
+          when: always
+          command: |
+            echo "=== Checking for screenshot files ==="
+            find tests/visual -name "*.png" 2>/dev/null || echo "No PNG files in tests/visual"
+            echo ""
+            echo "=== Checking test-results directory ==="
+            find test-results -type f -name "*.png" 2>/dev/null || echo "No PNG files in test-results"
+            echo ""
+            ls -la tests/visual/ || true
+      
       # Store test results
       - store_test_results:
           path: test-results
       
-      # ⭐ KEY FEATURE: Store screenshots as individual PNG files
-      # These will be viewable in CircleCI UI by clicking on them!
+      # ⭐ KEY FEATURE: Store ALL screenshot-related artifacts
+      # Including actual, expected, and diff images from test failures
       
-      # Store baseline screenshots (the actual PNG files!)
+      # Store the entire test-results directory (contains all screenshots)
       - store_artifacts:
-          path: tests/visual/homepage.spec.js-snapshots
-          destination: screenshots/homepage
+          path: test-results
+          destination: test-results
       
+      # Store baseline snapshots if they exist
       - store_artifacts:
-          path: tests/visual/dashboard.spec.js-snapshots
-          destination: screenshots/dashboard
+          path: tests/visual
+          destination: visual-test-snapshots
       
-      - store_artifacts:
-          path: tests/visual/profile.spec.js-snapshots
-          destination: screenshots/profile
-      
-      # Store HTML report (optional - for detailed results)
+      # Store HTML report
       - store_artifacts:
           path: test-results/report
           destination: playwright-report
