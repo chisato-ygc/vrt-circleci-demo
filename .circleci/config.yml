@@ -39,11 +39,15 @@ jobs:
             pip install flake8
             flake8 app/app.py --max-line-length=100 || true
 
-  # Job 2: Visual Regression Testing
+  # Job 2: Visual Regression Testing with Parallelism
   visual-regression-test:
     docker:
       # Use Playwright's official Docker image with browsers pre-installed
       - image: mcr.microsoft.com/playwright:v1.40.0-focal
+    
+    # Enable parallelism - run tests across 3 containers
+    parallelism: 3
+    
     steps:
       - checkout
       
@@ -69,13 +73,23 @@ jobs:
             # Wait a moment to ensure port is freed
             sleep 2
       
-      # Run Visual Regression Tests
+      # Run Visual Regression Tests with Test Splitting
       # Playwright will automatically start/stop Flask via webServer config
       - run:
-          name: Run Visual Regression Tests
+          name: Run Visual Regression Tests (Parallel)
           command: |
-            # Run Playwright tests - it will start Flask automatically
-            npx playwright test --project=chromium-desktop --update-snapshots || true
+            # List all test files
+            TESTFILES=$(find tests/visual -name "*.spec.js" | circleci tests split --split-by=filesize)
+            
+            echo "Container $CIRCLE_NODE_INDEX running tests:"
+            echo "$TESTFILES"
+            
+            # Run only the tests assigned to this container
+            if [ -n "$TESTFILES" ]; then
+              npx playwright test $TESTFILES --project=chromium-desktop --update-snapshots || true
+            else
+              echo "No tests assigned to this container"
+            fi
           no_output_timeout: 15m
       
       # Store test results
@@ -125,13 +139,15 @@ jobs:
           name: Results Summary
           when: always
           command: |
-            echo "=================================="
+            echo "=========================================="
             echo "📸 Visual Regression Test Complete!"
-            echo "=================================="
+            echo "=========================================="
+            echo ""
+            echo "Container: $CIRCLE_NODE_INDEX of $CIRCLE_NODE_TOTAL"
             echo ""
             echo "View your screenshots and reports in the 'Artifacts' tab above!"
             echo ""
-            echo "Available artifacts:"
+            echo "Available artifacts (collected from all parallel runs):"
             echo "  📁 screenshots/homepage - Homepage visual tests"
             echo "  📁 screenshots/dashboard - Dashboard visual tests"
             echo "  📁 screenshots/profile - Profile visual tests"
@@ -139,5 +155,6 @@ jobs:
             echo "  🖼️ failure-screenshots - Any visual differences detected"
             echo "  🎥 failure-videos - Videos of failed tests"
             echo ""
-            echo "=================================="
+            echo "✨ Tests ran in parallel across $CIRCLE_NODE_TOTAL containers!"
+            echo "=========================================="
 

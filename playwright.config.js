@@ -63,7 +63,7 @@ module.exports = defineConfig({
 
   // Web server configuration - start Flask app before tests
   webServer: {
-    command: 'python app/app.py',
+    command: process.env.CI ? 'python3 app/app.py' : 'python app/app.py',
     port: 5000,
     timeout: 120 * 1000,
     reuseExistingServer: !process.env.CI, // Always start fresh in CI

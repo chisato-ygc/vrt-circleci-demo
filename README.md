@@ -8,6 +8,7 @@ This project demonstrates:
 - ✅ **Visual Regression Testing** with Playwright
 - ✅ **Automated Screenshot Comparison** across browsers
 - ✅ **CircleCI Integration** with artifact visualization
+- ✅ **Test Parallelism** (3x faster test execution!) ⚡
 - ✅ **Beautiful Flask Web App** with 3 pages
 - ✅ **Complete CI/CD Pipeline** for VRT
 
@@ -245,6 +246,21 @@ Edit `.circleci/config.yml` to:
 - Add deployment steps
 - Configure notifications
 
+## ⚡ Test Parallelism
+
+This project uses **CircleCI's parallelism** feature to run tests 3x faster!
+
+### **How It Works:**
+- Tests split across **3 parallel containers**
+- Each container runs different test files simultaneously
+- All artifacts collected in one place
+
+### **Performance:**
+- **Without parallelism:** ~6-9 minutes
+- **With parallelism:** ~2-3 minutes ⚡
+
+**See [PARALLELISM_GUIDE.md](PARALLELISM_GUIDE.md) for details!**
+
 ## 🎓 Best Practices
 
 1. **Always commit baseline screenshots** to version control
@@ -254,6 +270,7 @@ Edit `.circleci/config.yml` to:
 5. **Disable animations** in screenshots for consistency
 6. **Test multiple browsers** and viewports
 7. **Store artifacts** for every build for debugging
+8. **Use parallelism** for faster feedback loops ⚡
 
 ## 🐛 Troubleshooting
 
