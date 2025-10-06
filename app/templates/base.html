@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}VRT Demo App{% endblock %}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+</head>
+<body>
+    <!-- Navigation Bar -->
+    <nav class="navbar" data-testid="navbar">
+        <div class="nav-container">
+            <div class="nav-brand">
+                <h1>🎨 VRT Demo</h1>
+            </div>
+            <ul class="nav-links">
+                <li><a href="/" class="nav-link {% if page == 'home' %}active{% endif %}" data-testid="nav-home">Home</a></li>
+                <li><a href="/dashboard" class="nav-link {% if page == 'dashboard' %}active{% endif %}" data-testid="nav-dashboard">Dashboard</a></li>
+                <li><a href="/profile" class="nav-link {% if page == 'profile' %}active{% endif %}" data-testid="nav-profile">Profile</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        {% block content %}{% endblock %}
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer" data-testid="footer">
+        <div class="footer-container">
+            <p>&copy; 2025 VRT CircleCI Demo Project</p>
+            <p>Built for Visual Regression Testing Learning</p>
+        </div>
+    </footer>
+
+    <script src="{{ url_for('static', filename='js/app.js') }}"></script>
+</body>
+</html>
+

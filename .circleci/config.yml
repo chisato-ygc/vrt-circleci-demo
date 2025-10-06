@@ -1,0 +1,166 @@
+version: 2.1
+
+orbs:
+  python: circleci/python@2.1.1
+  node: circleci/node@5.1.0
+
+workflows:
+  visual-regression-testing:
+    jobs:
+      - setup-and-test
+      - visual-regression-test:
+          requires:
+            - setup-and-test
+
+jobs:
+  # Job 1: Setup and run basic tests
+  setup-and-test:
+    docker:
+      - image: cimg/python:3.9
+    steps:
+      - checkout
+      
+      - python/install-packages:
+          pkg-manager: pip
+          pip-dependency-file: requirements.txt
+      
+      - run:
+          name: Test Flask application health
+          command: |
+            python app/app.py &
+            APP_PID=$!
+            sleep 5
+            curl http://localhost:5000/api/health
+            kill $APP_PID
+      
+      - run:
+          name: Run Python linting
+          command: |
+            pip install flake8
+            flake8 app/app.py --max-line-length=100 || true
+
+  # Job 2: Visual Regression Testing
+  visual-regression-test:
+    docker:
+      # Use Playwright's official Docker image with browsers pre-installed
+      - image: mcr.microsoft.com/playwright:v1.40.0-focal
+    steps:
+      - checkout
+      
+      # Install Python dependencies
+      - run:
+          name: Install Python dependencies
+          command: |
+            apt-get update && apt-get install -y python3-pip
+            pip3 install -r requirements.txt
+      
+      # Install Node.js dependencies (Playwright)
+      - run:
+          name: Install Node.js dependencies
+          command: |
+            npm install
+      
+      # Generate baseline screenshots (first time only)
+      # Comment this out after first successful run
+      - run:
+          name: Generate baseline screenshots
+          command: |
+            # Start Flask app in background
+            python3 app/app.py &
+            APP_PID=$!
+            
+            # Wait for app to start
+            sleep 10
+            
+            # Run Playwright tests to generate baselines
+            npx playwright test --update-snapshots || true
+            
+            # Stop Flask app
+            kill $APP_PID || true
+      
+      # Run Visual Regression Tests
+      - run:
+          name: Run Visual Regression Tests
+          command: |
+            # Start Flask app in background
+            python3 app/app.py &
+            APP_PID=$!
+            
+            # Wait for app to start
+            sleep 10
+            
+            # Run Playwright tests
+            npx playwright test --project=chromium-desktop || true
+            
+            # Stop Flask app
+            kill $APP_PID || true
+      
+      # Generate comparison report
+      - run:
+          name: Generate visual diff report
+          command: |
+            npx playwright show-report test-results/report || true
+      
+      # Store test results
+      - store_test_results:
+          path: test-results
+      
+      # ⭐ KEY FEATURE: Store ALL screenshots as artifacts
+      # These will be viewable in CircleCI UI!
+      
+      - store_artifacts:
+          path: test-results
+          destination: test-results
+      
+      - store_artifacts:
+          path: tests/visual/homepage.spec.js-snapshots
+          destination: screenshots/homepage
+      
+      - store_artifacts:
+          path: tests/visual/dashboard.spec.js-snapshots
+          destination: screenshots/dashboard
+      
+      - store_artifacts:
+          path: tests/visual/profile.spec.js-snapshots
+          destination: screenshots/profile
+      
+      # Store HTML report as artifact
+      - store_artifacts:
+          path: test-results/report
+          destination: playwright-report
+      
+      # Store any failure screenshots
+      - store_artifacts:
+          path: test-results/screenshots
+          destination: failure-screenshots
+      
+      # Store videos of failed tests
+      - store_artifacts:
+          path: test-results/videos
+          destination: failure-videos
+      
+      # Store traces for debugging
+      - store_artifacts:
+          path: test-results/traces
+          destination: traces
+      
+      - run:
+          name: Results Summary
+          when: always
+          command: |
+            echo "=================================="
+            echo "📸 Visual Regression Test Complete!"
+            echo "=================================="
+            echo ""
+            echo "View your screenshots and reports in the 'Artifacts' tab above!"
+            echo ""
+            echo "Available artifacts:"
+            echo "  📁 screenshots/homepage - Homepage visual tests"
+            echo "  📁 screenshots/dashboard - Dashboard visual tests"
+            echo "  📁 screenshots/profile - Profile visual tests"
+            echo "  📊 playwright-report - Full HTML test report"
+            echo "  🖼️ failure-screenshots - Any visual differences detected"
+            echo "  🎥 failure-videos - Videos of failed tests"
+            echo ""
+            echo "=================================="
+

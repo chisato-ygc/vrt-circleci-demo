@@ -1,0 +1,88 @@
+{% extends "base.html" %}
+
+{% block title %}Dashboard - VRT Demo App{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="page-header" data-testid="dashboard-header">
+        <h1>📊 Dashboard</h1>
+        <p>Monitor your application metrics in real-time</p>
+    </div>
+
+    <div class="dashboard-grid" data-testid="dashboard-grid">
+        <div class="metric-card metric-blue" data-testid="metric-users">
+            <div class="metric-icon">👥</div>
+            <div class="metric-content">
+                <div class="metric-value">{{ stats.users }}</div>
+                <div class="metric-label">Total Users</div>
+            </div>
+        </div>
+
+        <div class="metric-card metric-green" data-testid="metric-revenue">
+            <div class="metric-icon">💰</div>
+            <div class="metric-content">
+                <div class="metric-value">${{ stats.revenue }}</div>
+                <div class="metric-label">Revenue</div>
+            </div>
+        </div>
+
+        <div class="metric-card metric-purple" data-testid="metric-growth">
+            <div class="metric-icon">📈</div>
+            <div class="metric-content">
+                <div class="metric-value">{{ stats.growth }}%</div>
+                <div class="metric-label">Growth Rate</div>
+            </div>
+        </div>
+
+        <div class="metric-card metric-orange" data-testid="metric-satisfaction">
+            <div class="metric-icon">⭐</div>
+            <div class="metric-content">
+                <div class="metric-value">{{ stats.satisfaction }}%</div>
+                <div class="metric-label">Satisfaction</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="chart-section" data-testid="chart-section">
+        <h2>Activity Overview</h2>
+        <div class="chart-placeholder">
+            <div class="chart-bars">
+                <div class="chart-bar" style="height: 60%;" data-label="Mon"></div>
+                <div class="chart-bar" style="height: 75%;" data-label="Tue"></div>
+                <div class="chart-bar" style="height: 50%;" data-label="Wed"></div>
+                <div class="chart-bar" style="height: 90%;" data-label="Thu"></div>
+                <div class="chart-bar" style="height: 70%;" data-label="Fri"></div>
+                <div class="chart-bar" style="height: 40%;" data-label="Sat"></div>
+                <div class="chart-bar" style="height: 35%;" data-label="Sun"></div>
+            </div>
+        </div>
+    </div>
+
+    <div class="recent-activity" data-testid="recent-activity">
+        <h2>Recent Activity</h2>
+        <ul class="activity-list">
+            <li class="activity-item">
+                <span class="activity-icon">✅</span>
+                <span class="activity-text">Visual regression test passed</span>
+                <span class="activity-time">2 minutes ago</span>
+            </li>
+            <li class="activity-item">
+                <span class="activity-icon">📸</span>
+                <span class="activity-text">New baseline screenshots created</span>
+                <span class="activity-time">1 hour ago</span>
+            </li>
+            <li class="activity-item">
+                <span class="activity-icon">🔄</span>
+                <span class="activity-text">CircleCI pipeline completed</span>
+                <span class="activity-time">3 hours ago</span>
+            </li>
+            <li class="activity-item">
+                <span class="activity-icon">🚀</span>
+                <span class="activity-text">New deployment to staging</span>
+                <span class="activity-time">5 hours ago</span>
+            </li>
+        </ul>
+    </div>
+</div>
+{% endblock %}
+

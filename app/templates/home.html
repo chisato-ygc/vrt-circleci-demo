@@ -1,0 +1,67 @@
+{% extends "base.html" %}
+
+{% block title %}Home - VRT Demo App{% endblock %}
+
+{% block content %}
+<div class="hero-section" data-testid="hero-section">
+    <div class="hero-content">
+        <h1 class="hero-title">Visual Regression Testing</h1>
+        <p class="hero-subtitle">Catch visual bugs before your users do</p>
+        <div class="hero-buttons">
+            <a href="/dashboard" class="btn btn-primary">View Dashboard</a>
+            <a href="/profile" class="btn btn-secondary">My Profile</a>
+        </div>
+    </div>
+</div>
+
+<div class="container">
+    <section class="features" data-testid="features-section">
+        <h2 class="section-title">Key Features</h2>
+        <div class="cards">
+            <div class="card" data-testid="feature-card-1">
+                <div class="card-icon">📸</div>
+                <h3>Screenshot Testing</h3>
+                <p>Automatically capture and compare screenshots of your application</p>
+            </div>
+            <div class="card" data-testid="feature-card-2">
+                <div class="card-icon">🔍</div>
+                <h3>Visual Diffing</h3>
+                <p>Detect even the smallest visual changes in your UI</p>
+            </div>
+            <div class="card" data-testid="feature-card-3">
+                <div class="card-icon">🚀</div>
+                <h3>CI/CD Integration</h3>
+                <p>Seamlessly integrate with CircleCI for automated testing</p>
+            </div>
+            <div class="card" data-testid="feature-card-4">
+                <div class="card-icon">📊</div>
+                <h3>Detailed Reports</h3>
+                <p>View comprehensive reports with side-by-side comparisons</p>
+            </div>
+        </div>
+    </section>
+
+    <section class="stats" data-testid="stats-section">
+        <h2 class="section-title">Project Statistics</h2>
+        <div class="stats-grid">
+            <div class="stat-item">
+                <div class="stat-value">100%</div>
+                <div class="stat-label">Test Coverage</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-value">3</div>
+                <div class="stat-label">Pages Tested</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-value">&lt;2s</div>
+                <div class="stat-label">Test Duration</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-value">24/7</div>
+                <div class="stat-label">Monitoring</div>
+            </div>
+        </div>
+    </section>
+</div>
+{% endblock %}
+

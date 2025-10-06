@@ -1,0 +1,110 @@
+{% extends "base.html" %}
+
+{% block title %}Profile - VRT Demo App{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="page-header" data-testid="profile-header">
+        <h1>👤 User Profile</h1>
+        <p>Manage your account and view your activity</p>
+    </div>
+
+    <div class="profile-layout">
+        <div class="profile-sidebar" data-testid="profile-sidebar">
+            <div class="profile-avatar">
+                <div class="avatar-circle">{{ user.name[0] }}</div>
+            </div>
+            <h2 class="profile-name">{{ user.name }}</h2>
+            <p class="profile-role">{{ user.role }}</p>
+            <button class="btn btn-primary btn-block">Edit Profile</button>
+            <button class="btn btn-secondary btn-block">Settings</button>
+        </div>
+
+        <div class="profile-content" data-testid="profile-content">
+            <section class="profile-section">
+                <h3>Personal Information</h3>
+                <div class="info-grid">
+                    <div class="info-item">
+                        <span class="info-label">Email:</span>
+                        <span class="info-value">{{ user.email }}</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">Role:</span>
+                        <span class="info-value">{{ user.role }}</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">Member Since:</span>
+                        <span class="info-value">{{ user.joined }}</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">Location:</span>
+                        <span class="info-value">Tokyo, Japan</span>
+                    </div>
+                </div>
+            </section>
+
+            <section class="profile-section">
+                <h3>Activity Summary</h3>
+                <div class="activity-stats">
+                    <div class="activity-stat-item">
+                        <div class="activity-stat-icon">📁</div>
+                        <div class="activity-stat-content">
+                            <div class="activity-stat-value">{{ user.projects }}</div>
+                            <div class="activity-stat-label">Projects</div>
+                        </div>
+                    </div>
+                    <div class="activity-stat-item">
+                        <div class="activity-stat-icon">💻</div>
+                        <div class="activity-stat-content">
+                            <div class="activity-stat-value">{{ user.contributions }}</div>
+                            <div class="activity-stat-label">Contributions</div>
+                        </div>
+                    </div>
+                    <div class="activity-stat-item">
+                        <div class="activity-stat-icon">⭐</div>
+                        <div class="activity-stat-content">
+                            <div class="activity-stat-value">87</div>
+                            <div class="activity-stat-label">Stars</div>
+                        </div>
+                    </div>
+                    <div class="activity-stat-item">
+                        <div class="activity-stat-icon">🏆</div>
+                        <div class="activity-stat-content">
+                            <div class="activity-stat-value">15</div>
+                            <div class="activity-stat-label">Achievements</div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section class="profile-section">
+                <h3>Recent Projects</h3>
+                <ul class="project-list">
+                    <li class="project-item" data-testid="project-1">
+                        <div class="project-info">
+                            <h4>VRT CircleCI Demo</h4>
+                            <p>Visual regression testing with CircleCI integration</p>
+                        </div>
+                        <span class="project-status status-active">Active</span>
+                    </li>
+                    <li class="project-item" data-testid="project-2">
+                        <div class="project-info">
+                            <h4>CircleCI Python Project</h4>
+                            <p>Learning CI/CD with Python and Flask</p>
+                        </div>
+                        <span class="project-status status-active">Active</span>
+                    </li>
+                    <li class="project-item" data-testid="project-3">
+                        <div class="project-info">
+                            <h4>Docker Learning</h4>
+                            <p>Container orchestration and deployment</p>
+                        </div>
+                        <span class="project-status status-completed">Completed</span>
+                    </li>
+                </ul>
+            </section>
+        </div>
+    </div>
+</div>
+{% endblock %}
+

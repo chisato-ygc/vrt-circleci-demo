@@ -1,0 +1,9 @@
+# Flask Web Framework
+Flask==2.3.3
+
+# Environment variables
+python-dotenv==1.0.0
+
+# Production server
+gunicorn==21.2.0
+
