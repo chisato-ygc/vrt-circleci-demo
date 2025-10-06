@@ -96,13 +96,10 @@ jobs:
       - store_test_results:
           path: test-results
       
-      # ⭐ KEY FEATURE: Store ALL screenshots as artifacts
-      # These will be viewable in CircleCI UI!
+      # ⭐ KEY FEATURE: Store screenshots as individual PNG files
+      # These will be viewable in CircleCI UI by clicking on them!
       
-      - store_artifacts:
-          path: test-results
-          destination: test-results
-      
+      # Store baseline screenshots (the actual PNG files!)
       - store_artifacts:
           path: tests/visual/homepage.spec.js-snapshots
           destination: screenshots/homepage
@@ -115,25 +112,10 @@ jobs:
           path: tests/visual/profile.spec.js-snapshots
           destination: screenshots/profile
       
-      # Store HTML report as artifact
+      # Store HTML report (optional - for detailed results)
       - store_artifacts:
           path: test-results/report
           destination: playwright-report
-      
-      # Store any failure screenshots
-      - store_artifacts:
-          path: test-results/screenshots
-          destination: failure-screenshots
-      
-      # Store videos of failed tests
-      - store_artifacts:
-          path: test-results/videos
-          destination: failure-videos
-      
-      # Store traces for debugging
-      - store_artifacts:
-          path: test-results/traces
-          destination: traces
       
       - run:
           name: Results Summary
