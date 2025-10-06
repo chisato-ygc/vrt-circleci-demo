@@ -51,7 +51,7 @@ jobs:
       - run:
           name: Install Python dependencies
           command: |
-            apt-get update && apt-get install -y python3-pip
+            apt-get update && apt-get install -y python3-pip lsof
             pip3 install -r requirements.txt
       
       # Install Node.js dependencies (Playwright)
@@ -60,46 +60,23 @@ jobs:
           command: |
             npm install
       
-      # Generate baseline screenshots (first time only)
-      # Comment this out after first successful run
+      # Clean up any existing Flask processes
       - run:
-          name: Generate baseline screenshots
+          name: Kill any existing Flask processes
           command: |
-            # Start Flask app in background
-            python3 app/app.py &
-            APP_PID=$!
-            
-            # Wait for app to start
-            sleep 10
-            
-            # Run Playwright tests to generate baselines
-            npx playwright test --update-snapshots || true
-            
-            # Stop Flask app
-            kill $APP_PID || true
+            # Kill any process using port 5000
+            lsof -ti:5000 | xargs kill -9 || true
+            # Wait a moment to ensure port is freed
+            sleep 2
       
       # Run Visual Regression Tests
+      # Playwright will automatically start/stop Flask via webServer config
       - run:
           name: Run Visual Regression Tests
           command: |
-            # Start Flask app in background
-            python3 app/app.py &
-            APP_PID=$!
-            
-            # Wait for app to start
-            sleep 10
-            
-            # Run Playwright tests
-            npx playwright test --project=chromium-desktop || true
-            
-            # Stop Flask app
-            kill $APP_PID || true
-      
-      # Generate comparison report
-      - run:
-          name: Generate visual diff report
-          command: |
-            npx playwright show-report test-results/report || true
+            # Run Playwright tests - it will start Flask automatically
+            npx playwright test --project=chromium-desktop --update-snapshots || true
+          no_output_timeout: 15m
       
       # Store test results
       - store_test_results:

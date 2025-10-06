@@ -66,7 +66,10 @@ module.exports = defineConfig({
     command: 'python app/app.py',
     port: 5000,
     timeout: 120 * 1000,
-    reuseExistingServer: !process.env.CI,
+    reuseExistingServer: !process.env.CI, // Always start fresh in CI
+    // In CI, stdout/stderr goes to terminal
+    stdout: 'pipe',
+    stderr: 'pipe',
   },
 });
 
